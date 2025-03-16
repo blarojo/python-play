@@ -1,14 +1,15 @@
 # Flask app.py
 
+from datetime import timedelta
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from time_calculator import TimeCalculator
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,6 +49,16 @@ def delete(todo_id):
 def index():
     todo_list = Todo.query.all()
     return render_template('base.html', todo_list=todo_list)
+
+@app.route('/calculate_time')
+def calculate_time():
+    
+    time_calculator = TimeCalculator()
+    total_time = time_calculator.calculate_total_time(Todo.query.all())
+    print(f"Total time: {total_time}")
+    
+    return f"Total time to complete all todos: {total_time}"
+
 
 
 if __name__ == "__main__":

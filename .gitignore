@@ -1,2 +1,5 @@
 venv/
 instance/
+*.pyc
+__pycache__/
+.vscode/
